@@ -32,3 +32,23 @@ df.show(truncate=False)
 # 1	        Parth	  102	        Phone	              1
 # 2	        Rajesh	  103	        Tablet	              3
 # 2	        Rajesh	  104	       Headphones	      2
+
+--------------------------------------------------------------------------------
+
+## Step 1: Flatten the nested structure (explode orders)
+flat_df = df.withColumn("order", explode(col("orders")))
+
+flat_df.show(truncate=False)
+
+## Step 2: Select the required columns
+flat_df = flat_df.select(
+    "customer_id",
+    "name",
+    col("order.order_id").alias("order_id"),
+    col("order.product").alias("product"),
+    col("order.quantity").alias("quantity")
+)
+
+print("Flattened Data:")
+
+flat_df.show(truncate=False)
